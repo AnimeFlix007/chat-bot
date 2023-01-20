@@ -7,7 +7,8 @@ import { useState } from "react";
 
 function App() {
   const configuration = new Configuration({
-    apiKey: import.meta.env.VITE_API_SECRET_KEY,
+    organization: import.meta.env.VITE_ORG_KEY,
+    apiKey: import.meta.env.VITE_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
   const [option, setOption] = useState({});
@@ -20,18 +21,25 @@ function App() {
 
   const doStuff = async () => {
     let object = { ...option, prompt: input };
-    setLoading(true)
+    setLoading(true);
     const response = await openai.createCompletion(object);
     console.log(object, response.data);
     setResult(response.data.choices[0].text);
-    setLoading(false)
+    setLoading(false);
   };
+
   return (
     <div className="App">
       {Object.values(option).length === 0 ? (
         <OptionSelection arrayItems={arrayItems} selectOption={selectOption} />
       ) : (
-        <AI_answer doStuff={doStuff} setInput={setInput} loading={loading} result={result} selectOption={selectOption} />
+        <AI_answer
+          doStuff={doStuff}
+          setInput={setInput}
+          loading={loading}
+          result={result}
+          selectOption={selectOption}
+        />
       )}
     </div>
   );
